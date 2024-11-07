@@ -1,0 +1,23 @@
+Drogi Robocie,
+Znajdujesz się w magazynie o wymiarach 6 kolumn (x od 0 do 5) i 4 wierszy (y od 0 do 3). Twoja aktualna pozycja to (0, 3), a Twoim celem jest dotarcie do komputera z danymi na pozycji (5, 3).
+W magazynie znajdują się przeszkody (ściany) na następujących pozycjach (współrzędne x, y):
+(1, 0)
+(1, 2)
+(1, 3)
+(3, 1)
+(3, 2)
+Możesz poruszać się tylko w czterech kierunkach:
+UP (zmniejsza y o 1)
+DOWN (zwiększa y o 1)
+LEFT (zmniejsza x o 1)
+RIGHT (zwiększa x o 1)
+Twoje zadanie:
+Przeanalizuj mapę magazynu i znajdź najkrótszą ścieżkę od swojej pozycji do celu, omijając przeszkody.
+Przedstaw swoje rozumowanie krok po kroku.
+Na koniec podaj sekwencję ruchów w formacie JSON, zawartym pomiędzy znacznikami <RESULT> i </RESULT>:
+{
+
+  "steps": "kierunek1, kierunek2, kierunek3, ..."
+
+}
+Pamiętaj, że JSON powinien być poprawny i zawierać tylko pole "steps" z listą kroków oddzielonych przecinkami.
