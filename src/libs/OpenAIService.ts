@@ -47,6 +47,24 @@ export async function completion(messages: ChatCompletionMessageParam[], model: 
   }
 }
 
+export async function generateImage(prompt: string, model: string = "dall-e-3"): Promise<string> {
+  const openai = new OpenAI();
+
+  try {
+    const image = await openai.images.generate({
+      model: model,
+      prompt: prompt,
+      n: 1,
+      size: "1024x1024",
+    });
+
+    return image.data[0].url || '';
+  } catch (error: any) {
+    console.error("Error in OpenAI image generation:", error.error.message);
+    throw error.error.message;
+  }
+}
+
 export async function transcribeByGroq(filePath: string): Promise<string> {
   const groq = new Groq();
 
