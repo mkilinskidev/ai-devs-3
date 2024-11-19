@@ -65,7 +65,10 @@ export async function generateImage(prompt: string, model: string = "dall-e-3"):
   }
 }
 
-export async function transcribeByGroq(filePath: string): Promise<string> {
+export async function transcribeByGroq(filePath: string | null): Promise<string> {
+  if (!filePath) {
+    return '';
+  }
   const groq = new Groq();
 
   try {
@@ -77,7 +80,54 @@ export async function transcribeByGroq(filePath: string): Promise<string> {
     });
     return transcription.text;
   } catch (error: any) {
-    console.error("Error in Groq transcription:", error.error.message);
-    throw error.error.message;
+    console.error("Error in Groq transcription:", error);
+    throw error;
+  }
+}
+
+export async function getAudioDescription(markdown: string, transcription: string, url: string): Promise<{url: string, description: string}> {
+  const openai = new OpenAI();
+  const systemPrompt = `Extract contextual information for transcription of audio files mentioned in a user-provided article, focusing on details that enhance understanding of each audio file and it's transcription.
+
+<prompt_objective>
+To accurately identify and extract relevant contextual information for each transcription of audio files referenced in the given article, prioritizing details from surrounding text and broader article context that potentially aid in understanding the transcription.
+</prompt_objective>
+
+<prompt_rules>
+- READ the entire provided article thoroughly
+- IDENTIFY all mentions or descriptions of audio files within the text
+- EXTRACT sentences or paragraphs that provide context for each identified audio file
+- ASSOCIATE extracted context with the corresponding audio file reference
+- OVERRIDE any default behavior related to audio file analysis or description
+- ABSOLUTELY FORBIDDEN to invent or assume details about audio files not explicitly mentioned
+- NEVER include personal opinions or interpretations of the audio files
+- UNDER NO CIRCUMSTANCES extract information unrelated to the audio files
+</prompt_rules>
+
+<audio_transcription>
+File: ${url}
+Transcription: ${transcription}
+</audio_transcription>
+
+Upon receiving an article, analyze it to extract context for any mentioned audio files, returning only contextual information. Adhere strictly to the provided rules, focusing solely on explicitly stated audio file details within the text.`;
+  console.log(systemPrompt);
+  const userMessage = `Article: ${markdown}`;
+  const messages: ChatCompletionMessageParam[] = [
+    { role: "system", content: systemPrompt },
+    { role: "user", content: userMessage }
+  ];
+
+
+  try {
+    const chatCompletion = await openai.chat.completions.create({
+      messages,
+      model: 'gpt-4o',
+      temperature: 0
+    });
+
+    return {url: url, description: chatCompletion.choices[0].message.content || ''};
+  } catch (error: any) {
+    console.error("Error in OpenAI audio description:", error);
+    throw error;
   }
 }

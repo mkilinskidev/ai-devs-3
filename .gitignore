@@ -13,6 +13,8 @@ lerna-debug.log*
 *.zip
 src/s02/01-audio-i-interfejs-glosowy/przesluchania/*.*
 src/s02/04/pliki_z_fabryki/*.*
+src/s02/05/database/*.*
+src/s03/01/raporty/*
 
 # Caches
 
