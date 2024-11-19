@@ -15,6 +15,7 @@ src/s02/01-audio-i-interfejs-glosowy/przesluchania/*.*
 src/s02/04/pliki_z_fabryki/*.*
 src/s02/05/database/*.*
 src/s03/01/raporty/*
+src/s03/02/dane/*
 
 # Caches
 
