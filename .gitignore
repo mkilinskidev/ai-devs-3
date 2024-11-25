@@ -16,6 +16,8 @@ src/s02/04/pliki_z_fabryki/*.*
 src/s02/05/database/*.*
 src/s03/01/raporty/*
 src/s03/02/dane/*
+src/s03/04/storage/*
+src/s03/05/storage/*
 
 # Caches
 
