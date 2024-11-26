@@ -16,7 +16,8 @@ export async function askLLM(systemPrompt: string, question: string, model: stri
     const chatCompletion = await openai.chat.completions.create({
       messages,
       model: model,
-      temperature: 0
+      temperature: 0,
+      response_format: { "type": "json_object" }
     });
 
     if (cleanData) {
