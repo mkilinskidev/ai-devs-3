@@ -1,8 +1,53 @@
-
 import OpenAI from "openai";
 import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import Groq from "groq-sdk";
 import fs from "fs";
+
+export async function processOllamaImage(imagePath: string, systemPrompt: string): Promise<string> {
+    const openai = new OpenAI({
+        baseURL: 'http://localhost:11434/v1',
+        apiKey: 'ollama'
+    });
+
+    const file = Bun.file(imagePath);
+    const fileData = await file.arrayBuffer();
+    const fileBase64 = Buffer.from(fileData).toString('base64');
+
+    const messages: ChatCompletionMessageParam[] = [{
+        role: "system",
+        content: systemPrompt
+    },
+    {
+        role: "user",
+        content: [
+            {
+                type: "image_url",
+                image_url: {
+                    url: `data:image/png;base64,${fileBase64}`,
+                    detail: "auto"
+                }
+            },
+            {
+                type: "text",
+                text: "Opisz to zdjęcie"
+            }
+        ]
+    }];
+
+    try {
+        const chatCompletion = await openai.chat.completions.create({
+            messages,
+            model: 'llama3.2-vision',
+            temperature: 0.5
+        });
+
+        return chatCompletion.choices[0].message.content || '';
+    } catch (error: any) {
+        console.error("Error in OpenAI completion:", error);
+        throw error;
+    }
+
+}
 
 export async function askLLM(systemPrompt: string, question: string, model: string, cleanData = false): Promise<OpenAI.Chat.ChatCompletion | string> {
     const openai = new OpenAI();
